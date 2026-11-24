@@ -1,0 +1,77 @@
+/* Native captions stay in the DOM as the text source but are not shown. */
+.hys-active .ytp-caption-window-container {
+  visibility: hidden !important;
+}
+
+/* Covers the player so the font size can follow its height (cqh units).
+   Above the control bar (59), so subtitles dragged onto it stay readable and
+   selectable, but below YouTube's menus and panels. */
+.hys-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 60;
+  pointer-events: none;
+  container-type: size;
+}
+
+/* content.js sets left (the box's center) and bottom. */
+.hys-box {
+  position: absolute;
+  left: 50%;
+  bottom: 72px;
+  transform: translateX(-50%);
+  width: max-content;
+  /* About 40 characters per line: long phrases wrap into a steady column in
+     the middle instead of running across the whole video. */
+  max-width: min(90%, 22em);
+  padding: 0.15em 0.6em;
+  border-radius: 0.35em;
+  background: rgb(0 0 0 / var(--hys-background-opacity, 0.6));
+  color: #fff;
+  font-family: "YouTube Noto", Roboto, Arial, sans-serif;
+  font-size: calc(5cqh * var(--hys-font-scale, 1));
+  line-height: 1.5;
+  text-align: center;
+  text-shadow: 0 1px 2px rgb(0 0 0 / 0.8);
+  white-space: pre-wrap;
+  pointer-events: auto;
+  user-select: text;
+  -webkit-user-select: text;
+}
+
+/* Grip on the left of the box, shown on hover. It is part of the box, so
+   moving onto it keeps the phrase held. */
+.hys-handle {
+  position: absolute;
+  top: 0;
+  right: 100%;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  padding: 0 0.15em;
+  border-radius: 0.35em 0 0 0.35em;
+  background: rgb(0 0 0 / max(0.5, var(--hys-background-opacity, 0.6)));
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 0.15s, visibility 0.15s;
+}
+
+.hys-handle::before {
+  content: "⠿";
+  font-size: 0.8em;
+  opacity: 0.8;
+}
+
+.hys-box:hover .hys-handle,
+.hys-handle.hys-dragging {
+  visibility: visible;
+  opacity: 1;
+}
+
+.hys-handle.hys-dragging {
+  cursor: grabbing;
+}
